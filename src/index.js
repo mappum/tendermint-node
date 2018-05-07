@@ -49,8 +49,8 @@ function getRpcPort (opts) {
 
 module.exports = {
   node,
-  init: (opts) => run('init', opts),
-  initSync: (opts) => runSync('init', opts),
+  init: (home) => run('init', { home }),
+  initSync: (home) => runSync('init', { home }),
   version: () => runSync('version').stdout,
   genValidator: () => runSync('gen_validator').stdout
 }
