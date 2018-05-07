@@ -19,8 +19,11 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
+    "debug": "^3.1.0",
+    "decamelize": "^2.0.0",
     "execa": "^0.10.0",
     "progress": "^2.0.0",
+    "tendermint": "^3.1.2",
     "unzip": "^0.1.11"
   }
 }
