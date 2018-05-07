@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Run a Tendermint full node",
   "main": "index.js",
+  "bin": {
+    "tendermint": "./bin/tendermint"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "./bin/download.js"
   },
   "keywords": [
     "tendermint",
-    "full",
-    "node",
     "blockchain",
     "cosmos"
   ],
