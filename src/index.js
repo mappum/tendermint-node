@@ -71,6 +71,6 @@ module.exports = {
   lite,
   init: (home) => run('init', { home }),
   initSync: (home) => run('init', { home }, true),
-  version: () => run('version', true).stdout,
-  genValidator: () => run('gen_validator', true).stdout
+  version: () => run('version', {}, true).stdout,
+  genValidator: () => run('gen_validator', {}, true).stdout
 }
