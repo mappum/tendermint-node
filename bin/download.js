@@ -9,6 +9,7 @@ let unzip = require('unzip').Parse
 
 const TENDERMINT_VERSION = '0.19.2'
 
+console.log(`downloading tendermint v${TENDERMINT_VERSION}`)
 let binaryDownloadUrl = getBinaryDownloadURL()
 get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
   if (res.status !== 200) {
@@ -16,7 +17,6 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
   }
   let length = +res.headers['content-length']
 
-  console.log(`downloading Tendermint v${TENDERMINT_VERSION}`)
   let template = '[:bar] :rate/Mbps :percent :etas'
   let bar = new ProgressBar(template, {
     complete: '=',
@@ -62,7 +62,7 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
       process.exit(1)
     }
 
-    console.log('✅ hash of tendermint binary verified\n')
+    console.log('✅ verified hash of tendermint binary\n')
     renameSync(tempBinPath, binPath)
   })
 
