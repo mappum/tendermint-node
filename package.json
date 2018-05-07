@@ -1,0 +1,24 @@
+{
+  "name": "tendermint-node",
+  "version": "1.0.0",
+  "description": "Run a Tendermint full node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tendermint",
+    "full",
+    "node",
+    "blockchain",
+    "cosmos"
+  ],
+  "author": "Matt Bell <mappum@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "execa": "^0.10.0",
+    "progress": "^2.0.0",
+    "unzip": "^0.1.11"
+  }
+}
