@@ -34,13 +34,26 @@ Returns a `Promise`.
 
 The synchronous version of `tendermint.init()`.
 
-### `tendermint.node(opts)`
+### `tendermint.node(path, opts)`
 
-Spawns a tendermint full node.
+Spawns a Tendermint full node.
 
-Returns a `ChildProcess` object representing the tendermint process. It has an `rpc` property which is a client for the node's RPC server ([RpcClient](https://github.com/mappum/js-tendermint)).
+Returns a `ChildProcess` object representing the Tendermint process. It has an `rpc` property which is a client for the node's RPC server ([RpcClient](https://github.com/mappum/js-tendermint)).
+`path` should be a path to the directory (initialized by `init` or `initSync`).
 
-`opts` may be an object containing options passed to tendermint as CLI arguments (you may use any flag supported by tendermint). To see all supported options, run `npm i -g tendermint-node && tendermint node --help`.
+`opts` may be an object containing options passed to Tendermint as CLI arguments (you may use any flag supported by Tendermint). To see all supported options, run `npm i -g tendermint-node && tendermint node --help`.
+
+### `tendermint.lite(target, path, opts)`
+
+Spawns a Tendermint light node (talks to a full node and verifies its RPC data).
+
+Returns a `ChildProcess` object representing the Tendermint process. It has an `rpc` property which is a client for the node's RPC server ([RpcClient](https://github.com/mappum/js-tendermint)).
+
+`target` should be the URL of a full node's RPC server (e.g. `http://somefullnode.com:46657`).
+
+`path` should be a path to a directory where light client data will be stored.
+
+`opts` may be an object containing options passed to tendermint as CLI arguments (you may use any flag supported by tendermint). To see all supported options, run `npm i -g tendermint-node && tendermint lite --help`.
 
 ### `tendermint.version()`
 
