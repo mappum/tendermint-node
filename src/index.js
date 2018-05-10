@@ -33,9 +33,9 @@ function node (path, opts = {}) {
 
   let rpcPort = getRpcPort(opts)
   child.rpc = RpcClient(`http://localhost:${rpcPort}`)
+  child.started = waitForRpc(child.rpc)
+  child.synced = waitForSync(child.rpc)
 
-  // TODO: attach Promises for useful events
-  //       (e.g. when node is synced)
   return child
 }
 
@@ -52,9 +52,9 @@ function lite (target, path, opts = {}) {
 
   let rpcPort = getRpcPort(opts, 8888)
   child.rpc = RpcClient(`http://localhost:${rpcPort}`)
+  child.started = waitForRpc(child.rpc)
+  child.synced = waitForSync(child.rpc)
 
-  // TODO: attach Promises for useful events
-  //       (e.g. when node is synced)
   return child
 }
 
@@ -64,6 +64,34 @@ function getRpcPort (opts, defaultPort = 46657) {
   }
   let parsed = url.parse(opts.laddr || opts.rpc.laddr)
   return parsed.port
+}
+
+async function waitForRpc (client, timeout = 30 * 1000) {
+  while (true) {
+    try {
+      await client.status()
+      break
+    } catch (err) {
+      await wait(1000)
+    }
+  }
+}
+
+async function waitForSync (client, timeout = 30 * 1000) {
+  while (true) {
+    try {
+      let status = await client.status()
+      if (status.sync_info.syncing === false) {
+        break
+      }
+    } catch (err) {
+      await wait(1000)
+    }
+  }
+}
+
+function wait (ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 module.exports = {
