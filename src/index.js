@@ -66,31 +66,35 @@ function getRpcPort (opts, defaultPort = 46657) {
   return parsed.port
 }
 
-async function waitForRpc (client, timeout = 30 * 1000) {
-  while (true) {
-    try {
-      await client.status()
-      break
-    } catch (err) {
-      await wait(1000)
-    }
-  }
-}
+let waitForRpc = wait(async (client) => {
+  await client.status()
+  return true
+})
 
-async function waitForSync (client, timeout = 30 * 1000) {
-  while (true) {
-    try {
-      let status = await client.status()
-      if (status.sync_info.syncing === false) {
-        break
+let waitForSync = wait(async (client) => {
+  let status = await client.status()
+  return status.sync_info.syncing === false
+})
+
+function wait (condition) {
+  return async function (client, timeout = 30 * 1000) {
+    let start = Date.now()
+    while (true) {
+      let elapsed = Date.now() - start
+      if (elapsed > timeout) {
+        throw Error('Timed out while waiting')
       }
-    } catch (err) {
-      await wait(1000)
+
+      try {
+        if (await condition(client)) break
+      } catch (err) {}
+
+      await sleep(1000)
     }
   }
 }
 
-function wait (ms) {
+function sleep (ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
