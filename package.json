@@ -1,6 +1,6 @@
 {
   "name": "tendermint-node",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Run a Tendermint full node",
   "main": "index.js",
   "bin": {
