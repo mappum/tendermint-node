@@ -1,1 +1,2 @@
 bin/tendermint
+.nyc_output
