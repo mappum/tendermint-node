@@ -6,15 +6,16 @@ let flags = require('./flags.js')
 
 const binPath = require.resolve('../bin/tendermint')
 
-function run (command, opts, sync) {
+function run (command, opts, sync, execOpts) {
   let args = [ command, ...flags(opts) ]
-  debug('tendermint ' + args.join(' '))
-  let res = (sync ? exec.sync : exec)(binPath, args)
+  debug('spawning: tendermint ' + args.join(' '))
+  let res = (sync ? exec.sync : exec)(binPath, args, execOpts)
   maybeError(res)
   return res
 }
 
 function maybeError (res) {
+  if (res.killed) return
   if (res.then != null) {
     return res.then(maybeError)
   }
@@ -29,14 +30,9 @@ function node (path, opts = {}) {
   }
 
   opts.home = path
-  let child = run('node', opts)
-
+  let child = run('node', opts, false, { reject: false })
   let rpcPort = getRpcPort(opts)
-  child.rpc = RpcClient(`http://localhost:${rpcPort}`)
-  child.started = waitForRpc(child.rpc)
-  child.synced = waitForSync(child.rpc)
-
-  return child
+  return setupChildProcess(child, rpcPort)
 }
 
 function lite (target, path, opts = {}) {
@@ -47,15 +43,30 @@ function lite (target, path, opts = {}) {
     throw Error('"path" argument is required')
   }
 
+  opts.node = target
   opts.home = path
-  let child = run('lite', opts)
-
+  let child = run('lite', opts, false, { reject: false })
   let rpcPort = getRpcPort(opts, 8888)
-  child.rpc = RpcClient(`http://localhost:${rpcPort}`)
-  child.started = waitForRpc(child.rpc)
-  child.synced = waitForSync(child.rpc)
+  return setupChildProcess(child, rpcPort)
+}
 
-  return child
+function setupChildProcess (child, rpcPort) {
+  let rpc = RpcClient(`http://localhost:${rpcPort}`)
+  let started, synced
+
+  return Object.assign(child, {
+    rpc,
+    started: () => {
+      if (started) return started
+      started = waitForRpc(rpc)
+      return started
+    },
+    synced: () => {
+      if (synced) return synced
+      synced = waitForSync(rpc)
+      return synced
+    }
+  })
 }
 
 function getRpcPort (opts, defaultPort = 46657) {
@@ -73,7 +84,10 @@ let waitForRpc = wait(async (client) => {
 
 let waitForSync = wait(async (client) => {
   let status = await client.status()
-  return status.sync_info.syncing === false
+  return (
+    status.sync_info.syncing === false &&
+    status.sync_info.latest_block_height > 0
+  )
 })
 
 function wait (condition) {

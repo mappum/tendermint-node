@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "fs-extra": "^6.0.1",
     "nyc": "^11.7.3",
     "standard": "^11.0.1"
   }
