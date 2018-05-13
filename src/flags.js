@@ -6,13 +6,14 @@ let decamelize = require('decamelize')
 module.exports = function flags (opts = {}, prefix = '') {
   let args = []
   for (let [ key, value ] of Object.entries(opts)) {
+    key = decamelize(key)
     if (typeof value === 'object') {
       // recurse for objects
       let subArgs = flags(value, `${prefix}${key}.`)
       args.push(...subArgs)
     } else {
       // fooBar: 5 => '--foo_bar', '5'
-      let keyArg = `--${prefix}${decamelize(key)}`
+      let keyArg = `--${prefix}${key}`
       let valueArg = value.toString()
       args.push(keyArg, valueArg)
     }
