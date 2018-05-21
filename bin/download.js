@@ -7,10 +7,11 @@ let { get } = require('axios')
 let ProgressBar = require('progress')
 let unzip = require('unzip').Parse
 
-const TENDERMINT_VERSION = '0.19.2'
+let versionPath = join(__dirname, 'version')
+let tendermintVersion = readFileSync(versionPath, 'utf8').trim()
 
-console.log(`downloading tendermint v${TENDERMINT_VERSION}`)
-let binaryDownloadUrl = getBinaryDownloadURL()
+console.log(`downloading tendermint v${tendermintVersion}`)
+let binaryDownloadUrl = getBinaryDownloadURL(tendermintVersion)
 get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
   if (res.status !== 200) {
     throw Error(`Request failed, status: ${res.status}`)
@@ -72,7 +73,7 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
 })
 
 // gets a URL to the binary, hosted on GitHub
-function getBinaryDownloadURL (version = TENDERMINT_VERSION) {
+function getBinaryDownloadURL (version) {
   let platforms = {
     'darwin': 'darwin',
     'linux': 'linux',
