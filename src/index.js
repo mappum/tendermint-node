@@ -1,17 +1,31 @@
 let url = require('url')
 let debug = require('debug')('tendermint-node')
-let exec = require('execa')
+let _exec = require('execa')
+let _spawn = require('cross-spawn')
 let { RpcClient } = require('tendermint')
 let flags = require('./flags.js')
 
 const binPath = require.resolve('../bin/tendermint')
 
-function run (command, opts, sync, execOpts) {
+function exec (command, opts, sync) {
   let args = [ command, ...flags(opts) ]
-  debug('spawning: tendermint ' + args.join(' '))
-  let res = (sync ? exec.sync : exec)(binPath, args, execOpts)
+  debug('executing: tendermint ' + args.join(' '))
+  let res = (sync ? _exec.sync : _exec)(binPath, args)
   maybeError(res)
   return res
+}
+
+function spawn (command, opts) {
+  let args = [ command, ...flags(opts) ]
+  debug('spawning: tendermint ' + args.join(' '))
+  let child = _spawn(binPath, args)
+  let promise = new Promise((resolve, reject) => {
+    child.once('exit', resolve)
+    child.once('error', reject)
+  })
+  child.then = promise.then.bind(promise)
+  child.catch = promise.catch.bind(promise)
+  return child
 }
 
 function maybeError (res) {
@@ -30,7 +44,7 @@ function node (path, opts = {}) {
   }
 
   opts.home = path
-  let child = run('node', opts, false, { reject: false })
+  let child = spawn('node', opts)
   let rpcPort = getRpcPort(opts)
   return setupChildProcess(child, rpcPort)
 }
@@ -45,7 +59,7 @@ function lite (target, path, opts = {}) {
 
   opts.node = target
   opts.home = path
-  let child = run('lite', opts, false, { reject: false })
+  let child = spawn('lite', opts)
   let rpcPort = getRpcPort(opts, 8888)
   return setupChildProcess(child, rpcPort)
 }
@@ -115,8 +129,8 @@ function sleep (ms) {
 module.exports = {
   node,
   lite,
-  init: (home) => run('init', { home }),
-  initSync: (home) => run('init', { home }, true),
-  version: () => run('version', {}, true).stdout,
-  genValidator: () => run('gen_validator', {}, true).stdout
+  init: (home) => exec('init', { home }),
+  initSync: (home) => exec('init', { home }, true),
+  version: () => exec('version', {}, true).stdout,
+  genValidator: () => exec('gen_validator', {}, true).stdout
 }
