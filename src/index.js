@@ -19,6 +19,12 @@ function spawn (command, opts) {
   let args = [ command, ...flags(opts) ]
   debug('spawning: tendermint ' + args.join(' '))
   let child = _spawn(binPath, args)
+  setTimeout(() => {
+    try {
+      child.stdout.resume()
+      child.stderr.resume()
+    } catch (err) {}
+  }, 4000)
   let promise = new Promise((resolve, reject) => {
     child.once('exit', resolve)
     child.once('error', reject)
