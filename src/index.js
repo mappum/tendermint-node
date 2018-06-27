@@ -6,6 +6,7 @@ let { RpcClient } = require('tendermint')
 let flags = require('./flags.js')
 
 const binPath = require.resolve('../bin/tendermint')
+const logging = process.env.TM_LOG
 
 function exec (command, opts, sync) {
   let args = [ command, ...flags(opts) ]
@@ -19,12 +20,19 @@ function spawn (command, opts) {
   let args = [ command, ...flags(opts) ]
   debug('spawning: tendermint ' + args.join(' '))
   let child = _spawn(binPath, args)
+
   setTimeout(() => {
     try {
       child.stdout.resume()
       child.stderr.resume()
     } catch (err) {}
   }, 4000)
+
+  if (logging) {
+    child.stdout.pipe(process.stdout)
+    child.stderr.pipe(process.stderr)
+  }
+
   let promise = new Promise((resolve, reject) => {
     child.once('exit', resolve)
     child.once('error', reject)
