@@ -72,7 +72,7 @@ function lite (target, path, opts = {}) {
   }
 
   opts.node = target
-  opts.home = path
+  opts['home-dir'] = path
   let child = spawn('lite', opts)
   let rpcPort = getRpcPort(opts, 8888)
   return setupChildProcess(child, rpcPort)
