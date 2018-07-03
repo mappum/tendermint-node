@@ -113,7 +113,7 @@ let waitForRpc = wait(async (client) => {
 let waitForSync = wait(async (client) => {
   let status = await client.status()
   return (
-    status.sync_info.syncing === false &&
+    status.sync_info.catching_up === false &&
     status.sync_info.latest_block_height > 0
   )
 })
