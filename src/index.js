@@ -97,7 +97,7 @@ function setupChildProcess (child, rpcPort) {
   })
 }
 
-function getRpcPort (opts, defaultPort = 46657) {
+function getRpcPort (opts, defaultPort = 26657) {
   if (!opts || ((!opts.rpc || !opts.rpc.laddr) && !opts.laddr)) {
     return defaultPort
   }
