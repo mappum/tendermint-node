@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+let { spawn } = require('child_process')
 let { writeFileSync } = require('fs')
 let { join } = require('path')
 let { get } = require('axios')
@@ -25,6 +26,17 @@ async function main ({ argv }) {
   let versionPath = join(__dirname, 'version')
   writeFileSync(versionPath, version)
   console.log('✅ updated version file')
+
+  // run install script to download updated binary
+  await new Promise((resolve, reject) => {
+    let opts = {
+      stdio: 'inherit'
+    }
+    let install = spawn('npm', ['run', 'install'], opts)
+    install.once('close', (code) => {
+      code === 0 ? resolve() : reject()
+    })
+  })
 }
 
 main(process)
