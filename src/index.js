@@ -5,8 +5,9 @@ let _spawn = require('cross-spawn')
 let { RpcClient } = require('tendermint')
 let flags = require('./flags.js')
 
-const binPath = require.resolve('../bin/tendermint')
 const logging = process.env.TM_LOG
+const binPath = process.env.TM_BINARY ||
+  require.resolve('../bin/tendermint')
 
 function exec (command, opts, sync) {
   let args = [ command, ...flags(opts) ]
