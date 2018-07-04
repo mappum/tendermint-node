@@ -89,6 +89,7 @@ test('node with custom RPC port', async (t) => {
 test('lite', async (t) => {
   let nodeDir = tempDir()
   await tm.init(nodeDir)
+  let genesis = require(join(nodeDir, 'config/genesis.json'))
 
   let node = tm.node(nodeDir, {
     proxyApp: 'nilapp',
@@ -99,7 +100,11 @@ test('lite', async (t) => {
   await node.synced()
 
   let liteDir = tempDir()
-  let lite = tm.lite('tcp://localhost:36657', liteDir)
+  let lite = tm.lite(
+    'tcp://localhost:36657',
+    genesis.chain_id,
+    liteDir
+  )
   await lite.started()
   await lite.synced()
 
@@ -121,6 +126,7 @@ test('lite', async (t) => {
 test('lite with custom port', async (t) => {
   let nodeDir = tempDir()
   await tm.init(nodeDir)
+  let genesis = require(join(nodeDir, 'config/genesis.json'))
 
   let node = tm.node(nodeDir, {
     proxyApp: 'nilapp',
@@ -131,9 +137,12 @@ test('lite with custom port', async (t) => {
   await node.synced()
 
   let liteDir = tempDir()
-  let lite = tm.lite('tcp://localhost:26657', liteDir, {
-    laddr: 'tcp://localhost:7777'
-  })
+  let lite = tm.lite(
+    'tcp://localhost:26657',
+    genesis.chain_id,
+    liteDir,
+    { laddr: 'tcp://localhost:7777' }
+  )
   await lite.started()
   await lite.synced()
 
@@ -157,6 +166,12 @@ test('lite with missing args', async (t) => {
 
   try {
     tm.lite('foo')
+  } catch (err) {
+    t.is(err.message, '"chainId" argument is required')
+  }
+
+  try {
+    tm.lite('foo', 'bar')
   } catch (err) {
     t.is(err.message, '"path" argument is required')
   }

@@ -64,15 +64,19 @@ function node (path, opts = {}) {
   return setupChildProcess(child, rpcPort)
 }
 
-function lite (target, path, opts = {}) {
+function lite (target, chainId, path, opts = {}) {
   if (typeof target !== 'string') {
     throw Error('"target" argument is required')
+  }
+  if (typeof chainId !== 'string') {
+    throw Error('"chainId" argument is required')
   }
   if (typeof path !== 'string') {
     throw Error('"path" argument is required')
   }
 
   opts.node = target
+  opts['chain-id'] = chainId
   opts['home-dir'] = path
   let child = spawn('lite', opts)
   let rpcPort = getRpcPort(opts, 8888)
@@ -87,12 +91,12 @@ function setupChildProcess (child, rpcPort) {
     rpc,
     started: () => {
       if (started) return started
-      started = waitForRpc(rpc)
+      started = waitForRpc(rpc, child)
       return started
     },
     synced: () => {
       if (synced) return synced
-      synced = waitForSync(rpc)
+      synced = waitForSync(rpc, child)
       return synced
     }
   })
@@ -115,12 +119,12 @@ let waitForSync = wait(async (client) => {
   let status = await client.status()
   return (
     status.sync_info.catching_up === false &&
-    status.sync_info.latest_block_height > 0
+    Number(status.sync_info.latest_block_height) > 0
   )
 })
 
 function wait (condition) {
-  return async function (client, timeout = 30 * 1000) {
+  return async function (client, child, timeout = 30 * 1000) {
     let start = Date.now()
     while (true) {
       let elapsed = Date.now() - start
