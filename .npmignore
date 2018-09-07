@@ -1,2 +1,5 @@
 bin/tendermint
 .nyc_output
+.travis.yml
+test
+bin/update.js
