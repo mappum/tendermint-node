@@ -1,14 +1,35 @@
 #!/usr/bin/env node
 
-let { createHash } = require('crypto')
-let { createWriteStream, readFileSync, renameSync } = require('fs')
-let { join } = require('path')
-let { get } = require('axios')
-let ProgressBar = require('progress')
-let unzip = require('unzip').Parse
+const { createHash } = require('crypto')
+const {
+  createWriteStream,
+  readFileSync,
+  renameSync,
+  accessSync,
+  copyFileSync
+} = require('fs')
+const { homedir } = require('os')
+const { join, dirname } = require('path')
+const { get } = require('axios')
+const ProgressBar = require('progress')
+const unzip = require('unzip').Parse
+const mkdirp = require('mkdirp').sync
 
 let versionPath = join(__dirname, 'version')
 let tendermintVersion = readFileSync(versionPath, 'utf8').trim()
+
+let cacheBinPath = join(
+  homedir(),
+  '.tendermint-node',
+  `tendermint_${tendermintVersion}`
+)
+try {
+  accessSync(cacheBinPath)
+  // binary was already downloaded
+  process.exit(0)
+} catch (err) {
+  if (err.code !== 'ENOENT') throw err
+}
 
 console.log(`downloading tendermint v${tendermintVersion}`)
 let binaryDownloadUrl = getBinaryDownloadURL(tendermintVersion)
@@ -65,6 +86,9 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
 
     console.log('✅ verified hash of tendermint binary\n')
     renameSync(tempBinPath, binPath)
+
+    mkdirp(dirname(cacheBinPath))
+    copyFileSync(binPath, cacheBinPath)
   })
 
   // increment progress bar
@@ -72,7 +96,7 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
   res.data.on('end', () => console.log())
 })
 
-// gets a URL to the binary, hosted on GitHub
+// gets a URL to the binary zip, hosted on GitHub
 function getBinaryDownloadURL (version) {
   let platforms = {
     'darwin': 'darwin',
