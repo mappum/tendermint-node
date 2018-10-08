@@ -23,9 +23,11 @@ let cacheBinPath = join(
   '.tendermint-node',
   `tendermint_${tendermintVersion}`
 )
+let binPath = join(__dirname, 'tendermint')
 try {
   accessSync(cacheBinPath)
   // binary was already downloaded
+  copyFileSync(cacheBinPath, binPath)
   process.exit(0)
 } catch (err) {
   if (err.code !== 'ENOENT') throw err
@@ -48,7 +50,6 @@ get(binaryDownloadUrl, { responseType: 'stream' }).then((res) => {
   })
 
   let tempBinPath = join(__dirname, '_tendermint')
-  let binPath = join(__dirname, 'tendermint')
   let shasumPath = join(__dirname, 'SHA256SUMS')
 
   // unzip, write to file, and check hash
