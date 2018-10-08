@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "standard index.js src/*.js test/*.js && nyc ava",
-    "preinstall": "rm -f ./bin/tendermint && touch ./bin/tendermint",
+    "preinstall": "rm -f ./bin/tendermint",
     "install": "node ./bin/download.js",
     "update": "node ./bin/update.js"
   },
