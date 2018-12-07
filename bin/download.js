@@ -23,7 +23,13 @@ let cacheBinPath = join(
   '.tendermint-node',
   `tendermint_${tendermintVersion}`
 )
+
 let binPath = join(__dirname, 'tendermint')
+
+if (process.platform === 'win32') {
+  binPath += '.exe'
+}
+
 try {
   accessSync(cacheBinPath)
   // binary was already downloaded
