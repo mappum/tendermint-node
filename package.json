@@ -3,9 +3,6 @@
   "version": "3.4.3",
   "description": "Run a Tendermint full node",
   "main": "index.js",
-  "bin": {
-    "tendermint": "./bin/tendermint"
-  },
   "scripts": {
     "test": "standard index.js src/*.js test/*.js && nyc ava",
     "preinstall": "node ./bin/preinstall.js",
