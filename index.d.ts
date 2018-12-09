@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process';
 
-export function init(path: string): Promise<null>
+export function init(path: string): Promise<any>
 export function initSync(path: string)
 
 export function node(path: string, opts: object): ChildProcess
