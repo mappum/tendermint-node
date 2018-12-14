@@ -108,11 +108,10 @@ function getBinaryDownloadURL (version) {
   let platforms = {
     'darwin': 'darwin',
     'linux': 'linux',
-    'win32': 'windows',
-    'freebsd': 'freebsd'
+    'win32': 'windows'
   }
   let arches = {
-    'x64': 'amd64',
+    'x64': 'amd64'
   }
   let platform = platforms[process.platform]
   let arch = arches[process.arch]
