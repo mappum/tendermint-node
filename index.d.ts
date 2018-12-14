@@ -1,11 +1,11 @@
-import { ChildProcess } from 'child_process';
+import { ExecaChildProcess } from 'execa';
 
-export function init(path: string): Promise<any>
+export function init(path: string): ExecaChildProcess
 export function initSync(path: string)
 
-export function node(path: string, opts: object): ChildProcess
+export function node(path: string, opts: object): ExecaChildProcess
 
-export function lite(target: string, path: string, opts: object): ChildProcess
+export function lite(target: string, path: string, opts: object): ExecaChildProcess
 
 export function version(): string
 
