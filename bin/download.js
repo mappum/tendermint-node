@@ -112,10 +112,7 @@ function getBinaryDownloadURL (version) {
     'freebsd': 'freebsd'
   }
   let arches = {
-    'x32': '386',
     'x64': 'amd64',
-    'arm': 'arm',
-    'arm64': 'arm'
   }
   let platform = platforms[process.platform]
   let arch = arches[process.arch]
