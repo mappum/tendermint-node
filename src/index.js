@@ -94,7 +94,7 @@ function setupChildProcess (child, rpcPort) {
       started = waitForRpc(rpc, child, timeout)
       return started
     },
-    synced: (timeout) => {
+    synced: (timeout = Infinity) => {
       if (synced) return synced
       synced = waitForSync(rpc, child, timeout)
       return synced
