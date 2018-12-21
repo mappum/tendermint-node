@@ -89,14 +89,14 @@ function setupChildProcess (child, rpcPort) {
 
   return Object.assign(child, {
     rpc,
-    started: () => {
+    started: (timeout) => {
       if (started) return started
-      started = waitForRpc(rpc, child)
+      started = waitForRpc(rpc, child, timeout)
       return started
     },
-    synced: () => {
+    synced: (timeout) => {
       if (synced) return synced
-      synced = waitForSync(rpc, child)
+      synced = waitForSync(rpc, child, timeout)
       return synced
     }
   })
