@@ -113,5 +113,5 @@ function getBinaryDownloadURL (version) {
   }
   let platform = platforms[process.platform]
   let arch = arches[process.arch]
-  return `https://github.com/tendermint/tendermint/releases/download/v${version}/tendermint_${version}_${platform}_${arch}.zip`
+  return `https://github.com/tendermint/tendermint/releases/download/v${version}/tendermint_v${version}_${platform}_${arch}.zip`
 }
