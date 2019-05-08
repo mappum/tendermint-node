@@ -23,7 +23,13 @@ let cacheBinPath = join(
   '.tendermint-node',
   `tendermint_${tendermintVersion}`
 )
+
 let binPath = join(__dirname, 'tendermint')
+
+if (process.platform === 'win32') {
+  binPath += '.exe'
+}
+
 try {
   accessSync(cacheBinPath)
   // binary was already downloaded
@@ -102,14 +108,10 @@ function getBinaryDownloadURL (version) {
   let platforms = {
     'darwin': 'darwin',
     'linux': 'linux',
-    'win32': 'windows',
-    'freebsd': 'freebsd'
+    'win32': 'windows'
   }
   let arches = {
-    'x32': '386',
-    'x64': 'amd64',
-    'arm': 'arm',
-    'arm64': 'arm'
+    'x64': 'amd64'
   }
   let platform = platforms[process.platform]
   let arch = arches[process.arch]

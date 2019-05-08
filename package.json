@@ -3,12 +3,9 @@
   "version": "5.1.1",
   "description": "Run a Tendermint full node",
   "main": "index.js",
-  "bin": {
-    "tendermint": "./bin/tendermint"
-  },
   "scripts": {
     "test": "standard index.js src/*.js test/*.js && nyc ava",
-    "preinstall": "rm -f ./bin/tendermint && touch ./bin/tendermint",
+    "preinstall": "node ./bin/preinstall.js",
     "install": "node ./bin/download.js",
     "update": "node ./bin/update.js"
   },

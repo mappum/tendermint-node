@@ -4,10 +4,16 @@ let _exec = require('execa')
 let _spawn = require('cross-spawn')
 let { RpcClient } = require('tendermint')
 let flags = require('./flags.js')
+const { join } = require('path')
+
+let binPath = join(__dirname, '../bin/tendermint')
+
+if (process.platform === 'win32') {
+  binPath += '.exe'
+}
 
 const logging = process.env.TM_LOG
-const binPath = process.env.TM_BINARY ||
-  require.resolve('../bin/tendermint')
+binPath = process.env.TM_BINARY || binPath
 
 function exec (command, opts, sync) {
   let args = [ command, ...flags(opts) ]
