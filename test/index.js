@@ -51,7 +51,7 @@ test('node', async (t) => {
   let dir = tempDir()
   await tm.init(dir)
 
-  let node = tm.node(dir, { proxyApp: 'nilapp' })
+  let node = tm.node(dir, { proxyApp: 'noop' })
   await node.started()
   await node.synced()
 
@@ -72,7 +72,7 @@ test('node with custom RPC port', async (t) => {
   await tm.init(dir)
 
   let node = tm.node(dir, {
-    proxyApp: 'nilapp',
+    proxyApp: 'noop',
     p2p: { laddr: 'tcp://localhost:56656' },
     rpc: { laddr: 'tcp://localhost:56657' }
   })
@@ -92,7 +92,7 @@ test('lite', async (t) => {
   let genesis = require(join(nodeDir, 'config/genesis.json'))
 
   let node = tm.node(nodeDir, {
-    proxyApp: 'nilapp',
+    proxyApp: 'noop',
     p2p: { laddr: 'tcp://localhost:36656' },
     rpc: { laddr: 'tcp://localhost:36657' }
   })
@@ -129,7 +129,7 @@ test('lite with custom port', async (t) => {
   let genesis = require(join(nodeDir, 'config/genesis.json'))
 
   let node = tm.node(nodeDir, {
-    proxyApp: 'nilapp',
+    proxyApp: 'noop',
     p2p: { laddr: 'tcp://localhost:26656' },
     rpc: { laddr: 'tcp://localhost:26657' }
   })
