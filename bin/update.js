@@ -30,7 +30,8 @@ async function main ({ argv }) {
   // run install script to download updated binary
   await new Promise((resolve, reject) => {
     let opts = {
-      stdio: 'inherit'
+      stdio: 'inherit',
+      shell: true      
     }
     let install = spawn('npm', ['run', 'install'], opts)
     install.once('close', (code) => {
