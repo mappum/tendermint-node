@@ -26,7 +26,7 @@
     "natives": "^1.1.6",
     "progress": "^2.0.0",
     "tendermint": "^4.0.7",
-    "unzip": "^0.1.11"
+    "unzipper": "^0.10.5"
   },
   "devDependencies": {
     "ava": "^0.25.0",
