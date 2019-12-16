@@ -90,7 +90,7 @@ function lite (target, chainId, path, opts = {}) {
 }
 
 function setupChildProcess (child, rpcPort) {
-  let rpc = RpcClient(`http://localhost:${rpcPort}`)
+  let rpc = RpcClient(`ws://localhost:${rpcPort}`)
   let started, synced
 
   return Object.assign(child, {
