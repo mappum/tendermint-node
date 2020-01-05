@@ -12,7 +12,7 @@ const { homedir } = require('os')
 const { join, dirname } = require('path')
 const { get } = require('axios')
 const ProgressBar = require('progress')
-const unzip = require('unzip').Parse
+const unzip = require('unzipper').Parse
 const mkdirp = require('mkdirp').sync
 
 let versionPath = join(__dirname, 'version')
