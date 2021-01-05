@@ -17,7 +17,7 @@
   "author": "Matt Bell <mappum@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "cross-spawn": "^6.0.5",
     "debug": "^3.1.0",
     "decamelize": "^2.0.0",
